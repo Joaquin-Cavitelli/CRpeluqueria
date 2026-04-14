@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Great+Vibes&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-cursive: "Great Vibes", cursive;
+  
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  
+  --color-brand-50: #fdf6f4;
+  --color-brand-100: #fbece8;
+  --color-brand-200: #f7d9d1;
+  --color-brand-300: #f1cdc1;
+  --color-brand-400: #e9b3a3;
+  --color-brand-500: #df917d;
+  --color-brand-600: #d06f58;
+  --color-brand-700: #b95641;
+  --color-brand-800: #9a4838;
+  --color-brand-900: #34364c;
+  --color-brand-950: #1e1f2c;
+}
+
+@layer base {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  html, body {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    @apply bg-neutral-50 text-neutral-900 antialiased;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

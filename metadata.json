@@ -1,0 +1,7 @@
+{
+  "name": "CR peluqueria",
+  "description": "Aplicación de fidelización para clientes de peluquería con sistema de puntos por turnos y recompensas.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

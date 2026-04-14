@@ -1,0 +1,70 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User profile containing loyalty points and role.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string", "description": "Client's WhatsApp phone number." },
+        "turns": { "type": "number" },
+        "totalTurns": { "type": "number", "description": "Total lifetime turns accumulated." },
+        "role": { "type": "string", "enum": ["admin", "client"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "email", "turns", "totalTurns", "role"]
+    },
+    "Reward": {
+      "title": "Reward",
+      "description": "Dynamic reward definition.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "requiredTurns": { "type": "number" },
+        "type": { "type": "string", "enum": ["descuento", "servicio", "producto"] },
+        "description": { "type": "string" }
+      },
+      "required": ["name", "requiredTurns", "type"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "History of point movements.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["sum", "subtract", "redeem"] },
+        "amount": { "type": "number" },
+        "description": { "type": "string" },
+        "rewardId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["type", "amount", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "User",
+      "description": "User documents."
+    },
+    "/rewards/{rewardId}": {
+      "schema": "Reward",
+      "description": "Global rewards."
+    },
+    "/users/{uid}/history/{transactionId}": {
+      "schema": "Transaction",
+      "description": "User transaction history."
+    },
+    "/stats/global": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "allTotalTurns": { "type": "array", "items": { "type": "number" } }
+        }
+      },
+      "description": "Global statistics for dynamic ranking."
+    }
+  }
+}
