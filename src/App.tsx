@@ -310,11 +310,11 @@ function NotificationToast({ message, type, onClose }: NotificationToastProps) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
       className={cn(
-        "px-6 py-4 rounded-md shadow-2xl flex items-center gap-3 min-w-[300px] pointer-events-auto",
-        type === 'success' ? "bg-emerald-900 text-white" : "bg-neutral-900 text-white"
+        "px-6 py-4 rounded-md shadow-2xl text-center min-w-[300px] pointer-events-auto",
+        type === 'success' ? "bg-brand-900 text-white" : "bg-neutral-900 text-white"
       )}
     >
-      {type === 'success' ? <CheckCircle2 className="w-5 h-5 text-emerald-400" /> : <Bell className="w-5 h-5 text-indigo-400" />}
+      
       <p className="text-sm font-bold">{message}</p>
     </motion.div>
   );
@@ -357,8 +357,8 @@ function Modal({ isOpen, onClose, title, children }: { isOpen: boolean; onClose:
         >
           <div className="p-4 border-b border-neutral-50 flex justify-between items-center">
             <h3 className="font-bold text-lg tracking-tight text-neutral-900">{title}</h3>
-            <button onClick={onClose} className="p-1.5 hover:bg-neutral-50 rounded-full transition-colors">
-              <X className="w-4 h-4 text-neutral-400" />
+            <button onClick={onClose} className="p-1.5  rounded-full transition-colors">
+              <X className="w-4 h-4 text-brand-900" />
             </button>
           </div>
           <div className="p-5 max-h-[80vh] overflow-y-auto no-scrollbar">
@@ -424,48 +424,47 @@ const AdminDashboard = memo(function AdminDashboard({
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-white p-6 rounded-3xl border border-neutral-100 shadow-sm space-y-2">
-          <div className="w-10 h-10 bg-brand-50 rounded-2xl flex items-center justify-center text-brand-600">
-            <Users className="w-5 h-5" />
+        <div className="bg-white p-6 rounded-3xl border border-neutral-100 shadow-sm space-y-1">
+          <div className="w-10 h-10  flex items-center justify-center text-brand-900">
+            <Users className="w-15 h-15" />
           </div>
-          <p className="text-3xl font-extrabold text-neutral-900 tracking-tighter">{stats.totalClients}</p>
+          <p className="text-3xl font-extrabold text-brand-900 tracking-tighter">{stats.totalClients}</p>
           <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">Clientes</p>
         </div>
-        <div className="bg-white p-6 rounded-3xl border border-neutral-100 shadow-sm space-y-2">
-          <div className="w-10 h-10 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
-            <Sparkles className="w-5 h-5" />
+        <div className="bg-white p-6 rounded-3xl border border-neutral-100 shadow-sm space-y-1">
+          <div className="w-10 h-10  flex items-center justify-center text-brand-900">
+            <Sparkles className="w-15 h-15" />
           </div>
-          <p className="text-3xl font-extrabold text-neutral-900 tracking-tighter">{stats.totalTurns}</p>
-          <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">Turnos</p>
+          <p className="text-3xl font-extrabold text-brand-900 tracking-tighter">{stats.totalTurns}</p>
+          <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">Puntos Totales</p>
         </div>
       </div>
 
       <div className="bg-white rounded-3xl border border-neutral-100 shadow-sm overflow-hidden">
         <div className="p-6 border-b border-neutral-50 flex items-center justify-between">
-          <h3 className="font-bold text-neutral-900 flex items-center gap-2">
-            <Clock className="w-4 h-4 text-neutral-400" />
+          <h3 className="font-bold text-brand-900 flex items-center gap-2">
             Canjes Pendientes
           </h3>
-          <span className="px-2 py-1 bg-brand-50 text-brand-600 text-[10px] font-bold rounded-full">
-            {recentRedemptions.length} TOTAL
+          <span className="h-6 w-6 flex items-center justify-center bg-green-800/60 text-white text-[10px] font-bold rounded-full">
+            {recentRedemptions.length}
           </span>
         </div>
         <div className="divide-y divide-neutral-50">
           {recentRedemptions.length > 0 ? recentRedemptions.map(t => (
             <div key={t.id} className="p-6 flex items-center justify-between hover:bg-neutral-50 transition-colors">
               <div className="space-y-1">
-                <p className="font-bold text-neutral-900">{t.userName}</p>
+                <p className="font-bold text-brand-900">{t.userName}</p>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-brand-600 font-bold">{t.rewardName}</span>
+                  <span className="text-xs text-brand-900 font-bold">{t.rewardName}</span>
                   <span className="text-[10px] text-neutral-400">•</span>
                   <span className="text-[10px] text-neutral-400 font-medium">{t.createdAt?.toDate().toLocaleDateString()}</span>
                 </div>
               </div>
               <button 
                 onClick={() => onMarkRealized(t)}
-                className="px-4 py-2 bg-brand-900 text-white text-xs font-bold rounded-xl shadow-lg hover:bg-brand-950 transition-all active:scale-95"
+                className="px-4 py-2 bg-brand-900 text-white text-xs font-bold rounded-xl shadow-lg hover:bg-brand-950 transition-all active:scale-95 cursor-pointer"
               >
-                Entregar
+                Confirmar
               </button>
             </div>
           )) : (
@@ -524,7 +523,7 @@ const AdminUsers = memo(function AdminUsers({ users, onSelectUser, onScan, allTu
             placeholder="Buscar cliente..." 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-12 pr-4 py-4 bg-white border border-neutral-100 rounded-2xl shadow-sm focus:ring-4 focus:ring-brand-500/5 outline-none transition-all font-medium placeholder:text-neutral-300"
+            className="w-full pl-12 pr-4 py-3 bg-white border border-neutral-100 rounded-2xl shadow-sm focus:ring-4 focus:ring-brand-500/5 outline-none transition-all font-medium placeholder:text-neutral-300 text-brand-900"
           />
         </div>
         
@@ -533,10 +532,10 @@ const AdminUsers = memo(function AdminUsers({ users, onSelectUser, onScan, allTu
             onClick={() => setIsSortOpen(!isSortOpen)}
             className={cn(
               "h-full px-4 bg-white border border-neutral-100 rounded-2xl shadow-sm flex items-center justify-center transition-all active:scale-95",
-              isSortOpen ? "ring-2 ring-neutral-900 border-neutral-900" : "hover:border-neutral-200"
+              isSortOpen ? "bg-brand-900 " : ""
             )}
           >
-            <Filter className={cn("w-5 h-5 transition-colors", isSortOpen ? "text-neutral-900" : "text-neutral-400")} />
+            <Filter className={cn("w-5 h-5 transition-colors", isSortOpen ? "text-white" : "text-brand-900")} />
           </button>
 
           <AnimatePresence>
@@ -555,7 +554,7 @@ const AdminUsers = memo(function AdminUsers({ users, onSelectUser, onScan, allTu
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
                   className="absolute right-0 mt-2 w-48 bg-white border border-neutral-100 rounded-2xl shadow-2xl z-50 overflow-hidden"
                 >
-                  <div className="p-2">
+                  <div className="p-2 space-y-1">
                     <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest px-3 py-2">Ordenar por</p>
                     {sortOptions.map(opt => (
                       <button
@@ -565,8 +564,8 @@ const AdminUsers = memo(function AdminUsers({ users, onSelectUser, onScan, allTu
                           setIsSortOpen(false);
                         }}
                         className={cn(
-                          "w-full text-left px-3 py-2.5 rounded-xl text-sm font-bold transition-colors flex items-center justify-between",
-                          sortBy === opt.id ? "bg-neutral-900 text-white" : "text-neutral-600 hover:bg-neutral-50"
+                          "w-full text-left px-3 py-2 rounded-xl text-sm font-bold transition-colors flex items-center justify-between",
+                          sortBy === opt.id ? "bg-brand-900 text-white" : "text-brand-900 hover:bg-neutral-50"
                         )}
                       >
                         {opt.label}
@@ -591,24 +590,22 @@ const AdminUsers = memo(function AdminUsers({ users, onSelectUser, onScan, allTu
               className="w-full p-6 flex items-center justify-between hover:bg-neutral-50 transition-all group active:bg-neutral-100"
             >
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-neutral-900 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-105 transition-transform">
+                <div className="w-12 h-12 bg-brand-900 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:bg-brand-600 transition-colors">
                   <UserIcon className="w-6 h-6" />
                 </div>
                 <div className="text-left">
-                  <p className="font-bold text-neutral-900 group-hover:text-brand-600 transition-colors">{u.displayName}</p>
+                  <p className="font-bold text-brand-900 group-hover:text-brand-600 transition-colors">{u.displayName}</p>
                   <div className="flex items-center gap-2">
-                    <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full border", level.color)}>
-                      {level.name}
-                    </span>
+                    
                     <span className="text-[10px] text-neutral-400 font-medium">{u.email}</span>
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <div className="text-right">
-                  <p className="text-sm font-extrabold text-neutral-900 tracking-tight">
+                  <p className="text-sm font-extrabold text-brand-900 tracking-tight group-hover:text-brand-600 transition-colors">
                     {sortBy === 'total' ? (u.totalTurns ?? u.turns ?? 0) : u.turns} 
-                    <span className="text-[10px] text-neutral-400 font-bold ml-1 uppercase tracking-tighter">
+                    <span className="text-[10px] text-brand-900 font-bold ml-1 uppercase tracking-tighter group-hover:text-brand-600 transition-colors">
                       {sortBy === 'total' ? 'Total' : 'Pts'}
                     </span>
                   </p>
@@ -619,7 +616,7 @@ const AdminUsers = memo(function AdminUsers({ users, onSelectUser, onScan, allTu
                     </p>
                   )}
                 </div>
-                <ChevronRight className="w-5 h-5 text-neutral-200 group-hover:text-neutral-400 transition-colors" />
+                <ChevronRight className="w-5 h-5 text-neutral-200 group-hover:text-brand-600 transition-colors" />
               </div>
             </button>
           );
@@ -685,23 +682,21 @@ const ClientHome = memo(function ClientHome({ profile, rewards, onRedeem, allTur
         
         <div className="relative z-10 space-y-6">
           <div className="flex justify-between items-start">
-            <div className="space-y-1">
+            <div className="">
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">Tarjeta de premios</p>
               <h2 className="text-2xl font-extrabold tracking-tighter">{profile.displayName}</h2>
             </div>
-            <div className={cn("w-10 h-10 rounded-full border flex items-center justify-center shadow-sm transition-all duration-500", level.color)}>
-              {level.icon}
-            </div>
+            
           </div>
 
           <div className="flex items-end justify-between">
-            <div className="space-y-1">
+            <div className="">
               <p className="text-5xl font-black tracking-tighter">{profile.turns}</p>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Puntos Disponibles</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Puntos</p>
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-1">
             <div className="flex justify-between items-end text-[10px] font-bold uppercase tracking-widest">
               <div className="flex flex-col gap-1">
                 <span className="text-white/40">Próximo Premio</span>
@@ -709,7 +704,7 @@ const ClientHome = memo(function ClientHome({ profile, rewards, onRedeem, allTur
               </div>
               <span className="text-white">
                 {nextReward && (nextReward.requiredTurns - profile.turns >= 1) 
-                  ? `${nextReward.requiredTurns - profile.turns} pts faltantes` 
+                  ? `${nextReward.requiredTurns} puntos` 
                   : ''}
               </span>
             </div>
@@ -717,7 +712,7 @@ const ClientHome = memo(function ClientHome({ profile, rewards, onRedeem, allTur
               <motion.div 
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
-                className="h-full bg-gradient-to-r from-brand-300 to-brand-400 rounded-full shadow-[0_0_10px_rgba(241,205,193,0.3)]"
+                className="h-full bg-brand-300 to-brand-400 rounded-full shadow-[0_0_10px_rgba(241,205,193,0.3)]"
               />
             </div>
           </div>
@@ -726,20 +721,20 @@ const ClientHome = memo(function ClientHome({ profile, rewards, onRedeem, allTur
 
       {/* QR Section */}
       <div className=" py-2 flex flex-col items-center gap-4">
-        <div className="text-center">
+        {/* <div className="text-center">
           <h3 className="font-bold text-neutral-900">Tu Código QR</h3>
-          <p className="text-xs text-neutral-400 font-medium tracking-tight">Mostralo en la peluquería para sumar turnos</p>
-        </div>
+          <p className="text-xs text-neutral-400 font-medium tracking-tight">Mostralo para sumar turnos</p>
+        </div> */}
         <div className=" ">
           <QRCodeSVG value={profile.uid} size={200} level="H" includeMargin={false} />
         </div>
       </div>
 
       {/* Rewards Grid */}
-      <div className="space-y-6">
+      <div className="space-y-4 mt-12">
         <div className="flex items-center justify-between px-2">
-          <h3 className="font-bold text-neutral-900 tracking-tight">Premios Disponibles</h3>
-          <Gift className="w-4 h-4 text-neutral-300" />
+          <h3 className="font-bold text-brand-900 tracking-tight">Premios Disponibles</h3>
+          <Gift className="w-4 h-4 text-brand-900" />
         </div>
         
         <div className="grid gap-3">
@@ -751,54 +746,60 @@ const ClientHome = memo(function ClientHome({ profile, rewards, onRedeem, allTur
                 <div 
                   key={r.id} 
                   className={cn(
-                    "group relative bg-white p-5 rounded-xl border transition-all duration-300",
-                    isUnlocked ? "border-brand-900/10 shadow-sm hover:shadow-md" : "border-neutral-100 opacity-80"
+                    "group relative bg-white p-5 rounded-xl  border transition-all duration-300 overflow-hidden border-neutral-200  "
                   )}
                 >
+                  {isUnlocked && (
+                    <div className="absolute top-0 right-0">
+                      <div className="bg-brand-500 text-white text-[8px] font-semibold uppercase tracking-widest px-4 py-1 rounded-bl-lg shadow-sm">
+                        ¡Disponible!
+                      </div>
+                    </div>
+                  )}
                   <div className="flex items-center gap-4">
                     <div className={cn(
-                      "w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500",
-                      isUnlocked ? "bg-brand-900 text-white shadow-lg shadow-brand-900/20" : "bg-neutral-50 text-neutral-300"
+                      "w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500",
+                      isUnlocked 
+                        ? "bg-brand-900 text-white" 
+                        : "bg-brand-500 text-white"
                     )}>
-                      {r.type === 'producto' ? <Package className="w-6 h-6" /> : <Sparkles className="w-6 h-6" />}
+                      {r.type === 'producto' ? <Package className="w-6 h-6" /> : <Gift className="w-6 h-6" />}
                     </div>
-                    <div className="space-y-0.5 flex-1">
-                      <p className="font-bold text-neutral-900 tracking-tight">{r.name}</p>
+                    <div className=" flex-1">
+                      <p className={cn(
+                        "font-black tracking-tight transition-colors text-brand-900"
+                      )}>{r.name}</p>
                       <div className="flex items-center gap-2">
                         <span className={cn(
-                          "text-[10px] font-bold tracking-wider",
-                          isUnlocked ? "text-brand-900" : "text-neutral-400"
+                          "text-[11px] font-bold tracking-wider text-brand-900"
                         )}>
                           {r.requiredTurns} PUNTOS
                         </span>
-                        {isUnlocked && (
-                          <div className="w-1 h-1 rounded-full bg-brand-900/30" />
-                        )}
-                        <p className="text-[10px] text-neutral-400 font-medium uppercase tracking-tight">
-                          {isUnlocked ? 'Disponible' : 'Necesarios'}
-                        </p>
+                        
                       </div>
                     </div>
                   </div>
 
                   {isUnlocked ? (
+                    
                     <button 
                       onClick={() => onRedeem(r)}
-                      className="mt-4 w-full py-2.5 bg-brand-900 text-white text-[10px] font-bold uppercase tracking-widest rounded-xl hover:bg-brand-950 transition-all active:scale-95 shadow-sm"
+                      className="mt-5  py-3 bg-brand-900 text-white text-xs font-bold uppercase tracking-[0.2em] rounded-lg text-center w-full"
                     >
+                      
                       Canjear
                     </button>
                   ) : (
                     <div className="mt-4 space-y-1.5">
-                      <div className="flex justify-between text-[9px] font-bold text-neutral-400 uppercase tracking-widest">
-                        <span>Progreso</span>
-                        <span>{profile.turns} / {r.requiredTurns}</span>
+                      <div className="flex justify-end text-[9px] font-bold text-brand-900 uppercase tracking-widest">
+                        
+                        <span>Faltan {r.requiredTurns - profile.turns} puntos</span>
                       </div>
-                      <div className="h-1 bg-neutral-100 rounded-full overflow-hidden">
+                      <div className="h-2 bg-neutral-200 rounded-full overflow-hidden">
                         <motion.div 
                           initial={{ width: 0 }}
                           animate={{ width: `${rewardProgress}%` }}
-                          className="h-full bg-brand-900/40 rounded-full"
+                          className="h-full bg-brand-900 rounded-full"
                         />
                       </div>
                     </div>
@@ -823,8 +824,8 @@ function ActivityView({ transactions }: { transactions: Transaction[] }) {
     <div className="space-y-8">
       <div className="space-y-6">
         <div className="flex items-center justify-between px-2">
-          <h3 className="font-bold text-neutral-900 tracking-tight">Actividad Reciente</h3>
-          <History className="w-4 h-4 text-neutral-300" />
+          <h3 className="font-bold text-brand-900 tracking-tight">Actividad Reciente</h3>
+          <History className="w-4 h-4 text-brand-900" />
         </div>
         
         <div className="space-y-3">
@@ -840,15 +841,15 @@ function ActivityView({ transactions }: { transactions: Transaction[] }) {
               <div key={t.id} className="bg-white p-4 rounded-xl border border-neutral-100 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
                 <div className="flex items-center gap-3">
                   <div className={cn(
-                    "w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 shadow-inner",
-                    t.type === 'sum' ? "bg-emerald-50 text-emerald-600" : 
-                    t.type === 'redeem' ? "bg-brand-900/10 text-brand-900" : "bg-red-50 text-red-600"
+                    "w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-inner",
+                    t.type === 'sum' ? "bg-green-800/60 text-white" : 
+                    t.type === 'redeem' ? "bg-brand-900 text-white" : "bg-red-800/60 text-white"
                   )}>
                     {t.type === 'sum' ? <Plus className="w-4 h-4" /> : 
                      t.type === 'redeem' ? <Gift className="w-4 h-4" /> : <Minus className="w-4 h-4" />}
                   </div>
                   <div className="space-y-0.5">
-                    <p className="font-bold text-sm text-neutral-900 group-hover:text-brand-900 transition-colors">
+                    <p className="font-bold text-sm text-brand-900 ">
                       {t.description.replace(/^Canje: /, '')}
                     </p>
                     <div className="flex items-center gap-2">
@@ -866,8 +867,8 @@ function ActivityView({ transactions }: { transactions: Transaction[] }) {
                 <div className="text-right">
                   <p className={cn(
                     "font-black text-lg tracking-tighter leading-none",
-                    t.type === 'sum' ? "text-emerald-600" : 
-                    t.type === 'redeem' ? "text-brand-900" : "text-red-600"
+                    t.type === 'sum' ? "text-green-800/60" : 
+                    t.type === 'redeem' ? "text-brand-900/80" : "text-red-800/60"
                   )}>
                     {t.type === 'sum' ? '+' : '-'}{t.amount}
                   </p>
@@ -936,45 +937,30 @@ function AdminUserDetail({
   return (
     <div className="space-y-6 pb-12">
       <div className="flex items-center gap-3">
-        <button onClick={onBack} className="p-1.5 hover:bg-neutral-100 rounded-full transition-all">
-          <ArrowLeft className="w-5 h-5 text-neutral-600" />
+        <button onClick={onBack} className="p-1.5 cursor-pointer">
+          <ArrowLeft className="w-5 h-5 text-brand-900" />
         </button>
-        <h2 className="font-bold text-neutral-900 tracking-tight">Detalle del Cliente</h2>
+        <h2 className="font-bold text-brand-900 tracking-tight">Detalle del Cliente</h2>
       </div>
 
-      <div className="flex items-center justify-between p-4 bg-white border border-neutral-100 rounded-2xl shadow-sm">
+      <div className="flex gap-4 flex-col  p-4 bg-white border border-neutral-100 rounded-2xl shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-14 h-14 bg-neutral-50 rounded-xl flex items-center justify-center shadow-inner">
-            <UserIcon className="w-7 h-7 text-neutral-300" />
-          </div>
+          <div className="w-12 h-12 bg-brand-900 rounded-2xl flex items-center justify-center text-white shadow-lg ">
+                  <UserIcon className="w-6 h-6" />
+                </div>
           <div>
             <div className="flex items-center gap-2">
-              <h4 className="font-bold text-lg text-neutral-900 leading-tight">{user.displayName}</h4>
-              <div className={cn("inline-flex items-center justify-center w-6 h-6 rounded-full border text-[8px]", getLevel(user.totalTurns ?? user.turns ?? 0, allTurns).color)}>
-                {getLevel(user.totalTurns ?? user.turns ?? 0, allTurns).icon}
-              </div>
+              <h4 className="font-bold text-lg text-brand-900 leading-tight">{user.displayName}</h4>
+              
             </div>
             <p className="text-xs text-neutral-400 font-medium">{user.email}</p>
           </div>
+          
         </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3">
-        <div className="bg-neutral-900 text-white p-5 rounded-2xl text-center shadow-xl">
-          <p className="text-[10px] font-bold uppercase tracking-widest opacity-50 mb-1">Puntos Actuales</p>
-          <p className="text-3xl font-black">{user.turns}</p>
-        </div>
-        <div className="bg-white border border-neutral-100 p-5 rounded-2xl text-center flex flex-col justify-center shadow-sm">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">Puntos Totales</p>
-          <p className="text-2xl font-bold text-neutral-900">{user.totalTurns ?? user.turns ?? 0}</p>
-        </div>
-      </div>
-
-      <div className="bg-white p-4 rounded-2xl border border-neutral-100 shadow-sm space-y-3">
-        <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest px-1">WhatsApp</label>
+        <div>
+          <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest px-1">WhatsApp</label>
         <div className="flex gap-2">
-          <div className="flex-1 flex items-center bg-neutral-50 border border-neutral-100 rounded-xl px-4 focus-within:ring-2 focus-within:ring-neutral-900 transition-all">
-            <span className="text-neutral-400 font-bold text-sm mr-1">+54</span>
+          <div className="flex-1 flex items-center bg-neutral-50 border border-neutral-100 rounded-xl px-4 outline-none">
             <input 
               type="tel" 
               placeholder="Ej: 353 65..."
@@ -991,72 +977,100 @@ function AdminUserDetail({
                   handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}`);
                 }
               }}
-              className="flex-1 py-3 bg-transparent outline-none font-mono text-sm"
+              className="flex-1 py-3 bg-transparent outline-none font-mono text-sm text-brand-900 placeholder:text-neutral-400"
             />
           </div>
           {user.phone && (
             <button 
               onClick={handleSendWhatsApp}
-              className="p-3 bg-emerald-500 text-white rounded-xl shadow-lg active:scale-95 transition-all flex items-center justify-center"
+              className="p-3 bg-green-800/60 text-white rounded-xl shadow-lg active:scale-95 transition-all flex items-center justify-center cursor-pointer"
               title="Enviar WhatsApp"
             >
               <MessageCircle className="w-5 h-5" />
             </button>
           )}
         </div>
+        </div>
+      </div>
+      
+
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-brand-900 text-white p-5 rounded-2xl text-center shadow-xl">
+          <p className="text-[10px] font-bold uppercase tracking-widest  mb-1">Puntos Actuales</p>
+          <p className="text-3xl font-black text-white">{user.turns}</p>
+        </div>
+        <div className="bg-white border border-neutral-100 p-5 rounded-2xl text-center flex flex-col justify-center shadow-sm">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-brand-900 mb-1">Puntos Totales</p>
+          <p className="text-3xl font-bold text-brand-900">{user.totalTurns ?? user.turns ?? 0}</p>
+        </div>
       </div>
 
-      <div className="space-y-3">
-        <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest px-2">Acciones Rápidas</p>
+      
+
+      <div className="space-y-3 pb-8">
+        
         <div className="grid grid-cols-3 gap-3">
           <button 
             onClick={() => managePoints(user.uid, -1, 'subtract', 'Turno restado')}
-            className="col-span-1 flex items-center justify-center gap-2 py-4 bg-red-50 text-red-700 rounded-xl font-bold active:scale-95 transition-all border border-red-100 text-sm shadow-sm"
+            className="col-span-1  py-4 bg-red-800/60 text-white rounded-xl font-bold  text-base cursor-pointer"
           >
-            <Minus className="w-4 h-4" /> Restar
+            Restar
           </button>
           <button 
             onClick={() => managePoints(user.uid, 1, 'sum', 'Turno sumado')}
-            className="col-span-2 flex items-center justify-center gap-3 py-4 bg-emerald-600 text-white rounded-xl font-black active:scale-95 transition-all shadow-xl shadow-emerald-500/20 text-base"
+            className="col-span-2  py-4 bg-green-800/60 text-white rounded-xl font-bold  text-base cursor-pointer"
           >
-            <Plus className="w-6 h-6" /> SUMAR PUNTO
+            Sumar punto
           </button>
         </div>
       </div>
 
       <div className="space-y-4">
         <div className="flex items-center justify-between px-2">
-          <p className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Historial de Actividad</p>
-          <History className="w-4 h-4 text-neutral-400" />
+          <p className="text-xs font-bold text-brand-900 uppercase tracking-widest">Historial de Actividad</p>
+          <History className="w-4 h-4 text-brand-900" />
         </div>
         <div className="space-y-3">
           {transactions.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-md border border-neutral-100 shadow-sm">
-              <p className="text-neutral-400 font-medium italic">Sin actividad reciente</p>
+            <div className="text-center py-16 bg-white rounded-xl border border-neutral-100 shadow-sm">
+              <div className="w-16 h-16 bg-neutral-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <Clock className="w-8 h-8 text-neutral-200" />
+              </div>
+              <p className="text-neutral-400 font-medium tracking-tight">No hay actividad registrada aún.</p>
             </div>
           ) : (
             transactions.map(t => (
-              <div key={t.id} className="bg-white p-3 rounded-2xl border border-neutral-100 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
+              <div key={t.id} className="bg-white p-4 rounded-xl border border-neutral-100 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
                 <div className="flex items-center gap-3">
                   <div className={cn(
-                    "w-9 h-9 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 shadow-inner",
-                    t.type === 'sum' ? "bg-emerald-50 text-emerald-600" : 
-                    t.type === 'subtract' ? "bg-red-50 text-red-600" : "bg-brand-50 text-brand-600"
+                    "w-10 h-10 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-inner",
+                    t.type === 'sum' ? "bg-green-800/60 text-white" : 
+                    t.type === 'redeem' ? "bg-brand-900 text-white" : "bg-red-800/60 text-white"
                   )}>
                     {t.type === 'sum' ? <Plus className="w-4 h-4" /> : 
-                     t.type === 'subtract' ? <Minus className="w-4 h-4" /> : <Gift className="w-4 h-4" />}
+                     t.type === 'redeem' ? <Gift className="w-4 h-4" /> : <Minus className="w-4 h-4" />}
                   </div>
                   <div className="space-y-0.5">
-                    <p className="font-bold text-sm text-neutral-900 group-hover:text-brand-600 transition-colors">{t.description}</p>
-                    <p className="text-[9px] text-neutral-400 font-bold uppercase tracking-widest">
-                      {t.createdAt?.toDate ? t.createdAt.toDate().toLocaleString() : 'Reciente'}
+                    <p className="font-bold text-sm text-brand-900 ">
+                      {t.description.replace(/^Canje: /, '')}
                     </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-[9px] text-neutral-400 font-bold uppercase tracking-widest">
+                        {t.createdAt?.toDate ? t.createdAt.toDate().toLocaleDateString() : 'Reciente'}
+                      </p>
+                      {t.type === 'redeem' && (
+                        <span className="text-[7px] bg-brand-900/10 text-brand-900 px-1.5 py-0.5 rounded-full font-black uppercase tracking-widest">
+                          Canje
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className="text-right">
                   <p className={cn(
                     "font-black text-lg tracking-tighter leading-none",
-                    t.type === 'sum' ? "text-emerald-600" : "text-red-600"
+                    t.type === 'sum' ? "text-green-800/60" : 
+                    t.type === 'redeem' ? "text-brand-900/80" : "text-red-800/60"
                   )}>
                     {t.type === 'sum' ? '+' : '-'}{t.amount}
                   </p>
@@ -1127,50 +1141,68 @@ export default function App() {
         
         // Listen for profile
         const unsubProfile = onSnapshot(userDocRef, async (snapshot) => {
-          if (snapshot.exists()) {
-            const data = snapshot.data() as UserProfile;
-            // Initialize totalTurns for existing users if missing
-            if (data.totalTurns === undefined) {
-              const initialTotal = data.turns || 0;
-              await updateDoc(userDocRef, { totalTurns: initialTotal });
-              data.totalTurns = initialTotal;
+          try {
+            if (snapshot.exists()) {
+              const data = snapshot.data() as UserProfile;
+              // Initialize totalTurns for existing users if missing
+              if (data.totalTurns === undefined) {
+                const initialTotal = data.turns || 0;
+                await updateDoc(userDocRef, { totalTurns: initialTotal });
+                data.totalTurns = initialTotal;
+              }
+              setProfile(data);
+              if (data.role === 'client') setActiveTab('client');
+              setLoading(false);
+            } else {
+              const newProfile: UserProfile = {
+                uid: firebaseUser.uid,
+                displayName: firebaseUser.displayName || 'Usuario',
+                email: firebaseUser.email || '',
+                turns: 0,
+                totalTurns: 0,
+                role: firebaseUser.email === 'jcavitellihs@gmail.com' ? 'admin' : 'client',
+                createdAt: serverTimestamp()
+              };
+              await setDoc(userDocRef, newProfile);
+              setProfile(newProfile);
+              setLoading(false);
+              // Initial stats update will be handled by admin later or we can try here if rules allow
+              if (newProfile.role === 'client') {
+                const statsRef = doc(db, 'stats', 'global');
+                updateDoc(statsRef, { allTotalTurns: arrayUnion(0) }).catch(() => {
+                  // If it fails (e.g. doc doesn't exist), admin will fix it on next point addition
+                  setDoc(statsRef, { allTotalTurns: [0] }, { merge: true }).catch(() => {});
+                });
+              }
             }
-            setProfile(data);
-            if (data.role === 'client') setActiveTab('client');
-          } else {
-            const newProfile: UserProfile = {
-              uid: firebaseUser.uid,
-              displayName: firebaseUser.displayName || 'Usuario',
-              email: firebaseUser.email || '',
-              turns: 0,
-              totalTurns: 0,
-              role: firebaseUser.email === 'jcavitellihs@gmail.com' ? 'admin' : 'client',
-              createdAt: serverTimestamp()
-            };
-            await setDoc(userDocRef, newProfile);
-            setProfile(newProfile);
-            // Initial stats update will be handled by admin later or we can try here if rules allow
-            if (newProfile.role === 'client') {
-              const statsRef = doc(db, 'stats', 'global');
-              updateDoc(statsRef, { allTotalTurns: arrayUnion(0) }).catch(() => {
-                // If it fails (e.g. doc doesn't exist), admin will fix it on next point addition
-                setDoc(statsRef, { allTotalTurns: [0] }, { merge: true }).catch(() => {});
-              });
-            }
+          } catch (err) {
+            handleFirestoreError(err, OperationType.WRITE, `users/${firebaseUser.uid}`);
+            setLoading(false);
+            signOut(auth);
           }
-        }, (err) => handleFirestoreError(err, OperationType.GET, `users/${firebaseUser.uid}`));
+        }, (err) => {
+          handleFirestoreError(err, OperationType.GET, `users/${firebaseUser.uid}`);
+          setLoading(false);
+          signOut(auth); // Sign out if profile can't be fetched/created
+        });
 
         // Listen for rewards (global)
         const unsubRewards = onSnapshot(collection(db, 'rewards'), (snapshot) => {
           setRewards(snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Reward)));
-        }, (err) => handleFirestoreError(err, OperationType.GET, 'rewards'));
+        }, (err) => {
+          handleFirestoreError(err, OperationType.GET, 'rewards');
+          setLoading(false);
+        });
 
         // Listen for global stats
         const unsubStats = onSnapshot(doc(db, 'stats', 'global'), (snapshot) => {
           if (snapshot.exists()) {
             setAllTurns(snapshot.data().allTotalTurns || []);
           }
-        }, (err) => handleFirestoreError(err, OperationType.GET, 'stats/global'));
+        }, (err) => {
+          handleFirestoreError(err, OperationType.GET, 'stats/global');
+          setLoading(false);
+        });
 
         return () => {
           unsubProfile();
@@ -1231,10 +1263,12 @@ export default function App() {
   // --- Actions ---
 
   const handleLogin = async () => {
+    setLoading(true);
     try {
       await signInWithPopup(auth, googleProvider);
     } catch (error) {
       console.error("Login Error:", error);
+      setLoading(false);
     }
   };
 
@@ -1351,7 +1385,7 @@ export default function App() {
       // Check for reward milestones
       const unlockedRewards = rewards.filter(r => r.requiredTurns > currentTurns && r.requiredTurns <= newTurns);
       if (unlockedRewards.length > 0) {
-        addNotification(`¡Felicidades! Desbloqueaste: ${unlockedRewards.map(r => r.name).join(', ')}`, 'success');
+        addNotification(`Desbloqueaste: ${unlockedRewards.map(r => r.name).join(', ')}`, 'success');
       }
     } catch (err) {
       handleFirestoreError(err, OperationType.WRITE, `users/${uid}/history`);
@@ -1415,19 +1449,29 @@ export default function App() {
     }
   };
 
-  if (loading && !profile) {
+  if (loading) {
     return (
-      <div className="min-h-screen bg-neutral-50 p-6 pb-32">
-        <div className="max-w-md mx-auto space-y-8">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <Skeleton className="w-32 h-8" />
-              <Skeleton className="w-48 h-4" />
-            </div>
-            <Skeleton className="w-12 h-12 rounded-full" />
+      <div className="min-h-screen bg-[#34364c] flex flex-col items-center justify-center p-6 text-center">
+        <div className="space-y-6">
+          <div
+            className="w-48 h-48 mx-auto"
+          >
+            <img 
+              src="/logo.png" 
+              alt="Cargando..." 
+              className="w-full h-full object-contain"
+            />
           </div>
-          {/* We don't know the role yet, so we show a generic skeleton or the client one as default */}
-          <ClientSkeleton />
+          <div className="space-y-2">
+            <p className="text-white/60 font-bold tracking-widest uppercase text-[10px]">Cargando</p>
+            <div className="w-24 h-1 bg-white/10 mx-auto rounded-full overflow-hidden">
+              <motion.div 
+                animate={{ x: [-100, 100] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                className="w-full h-full bg-brand-300"
+              />
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -1439,9 +1483,9 @@ export default function App() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }} 
           animate={{ opacity: 1, y: 0 }} 
-          className="max-w-sm w-full space-y-10 relative z-10"
+          className="max-w-sm w-full space-y-20 relative z-10"
         >
-          <div className="space-y-6">
+          <div>
             <div className="w-64 h-64 mx-auto relative group overflow-hidden">
               <img 
                 src="/logo.png" 
@@ -1449,17 +1493,17 @@ export default function App() {
                 className="w-full h-full object-contain relative z-10"
               />
             </div>
-            <p className="text-white/40 font-medium tracking-tight">Tu estilo merece ser recompensado.</p>
+            <p className="text-white/40  -translate-y-4">Tu estilo merece ser recompensado</p>
           </div>
 
           <button 
             onClick={handleLogin} 
-            className="group max-w-[240px] mx-auto w-full flex items-center justify-center gap-3 bg-white border border-white/10 text-neutral-700 font-bold py-3 px-4 rounded-2xl shadow-lg hover:-translate-y-0.5 transition-all active:scale-95 text-sm"
+            className="group max-w-[240px] mx-auto  w-full flex items-center justify-center gap-3 bg-white border border-white/10 text-neutral-700 font-bold py-3 px-4 rounded-xl text-sm cursor-pointer"
           >
-            <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-sm border border-neutral-50 group-hover:scale-110 transition-transform">
+            <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
               <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" alt="Google" className="w-4 h-4" />
             </div>
-            <span className="tracking-tight">Ingresar con Google</span>
+            <span className="tracking-tight text-brand-900">Ingresar con Google</span>
           </button>
         </motion.div>
       </div>
@@ -1520,7 +1564,7 @@ export default function App() {
 
         {/* Navigation */}
         {!selectedUser && (
-          <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-2xl border border-white/50 p-2 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex items-center gap-1 z-50 ring-1 ring-black/5">
+          <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white/80 backdrop-blur-2xl border border-white/50 p-2 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex items-center gap-1 z-50 ring-1 ring-black/5">
             {profile?.role === 'admin' ? (
               <>
                 <NavButton active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} icon={<LayoutDashboard className="w-5 h-5" />} label="Inicio" hideLabel />
@@ -1601,26 +1645,24 @@ export default function App() {
         </Modal>
 
         {/* Confirmation Modal */}
-        <Modal isOpen={!!confirmingReward} onClose={() => setConfirmingReward(null)} title="Confirmar Canje">
+        <Modal isOpen={!!confirmingReward} onClose={() => setConfirmingReward(null)} title="">
           {confirmingReward && (
             <div className="space-y-6 text-center">
-              <div className="w-20 h-20 bg-neutral-900 text-white rounded-md flex items-center justify-center mx-auto shadow-xl">
-                <Gift className="w-10 h-10" />
-              </div>
+              
               <div className="space-y-2">
-                <h3 className="text-xl font-bold text-neutral-900">¿Canjear {confirmingReward.name}?</h3>
-                <p className="text-sm text-neutral-500">Se descontarán <span className="font-bold text-neutral-900">{confirmingReward.requiredTurns} turnos</span> de tu saldo actual.</p>
+                <h3 className="text-xl font-bold text-brand-900">¿Canjear {confirmingReward.name}?</h3>
+                <p className="text-sm text-neutral-500">Se descontarán <span className="font-bold text-brand-900">{confirmingReward.requiredTurns} turnos</span></p>
               </div>
               <div className="flex gap-3 pt-4">
                 <button 
                   onClick={() => setConfirmingReward(null)}
-                  className="flex-1 py-4 bg-neutral-100 text-neutral-500 rounded-md font-bold active:scale-95 transition-all"
+                  className="flex-1 py-2 bg-neutral-200 text-neutral-700 rounded-md font-semibold active:scale-95 transition-all"
                 >
                   Cancelar
                 </button>
                 <button 
                   onClick={confirmRedeem}
-                  className="flex-1 py-4 bg-neutral-900 text-white rounded-md font-bold shadow-lg active:scale-95 transition-all"
+                  className="flex-1 py-2 bg-brand-900 text-white rounded-md font-semibold shadow-lg active:scale-95 transition-all"
                 >
                   Confirmar
                 </button>
@@ -1672,7 +1714,7 @@ export default function App() {
               </button>
               <button 
                 onClick={handleLogout}
-                className="flex-1 py-2 bg-red-500 text-white rounded-md font-bold shadow-lg active:scale-95 transition-all"
+                className="flex-1 py-2 bg-red-800/60 text-white rounded-md font-bold shadow-lg active:scale-95 transition-all"
               >
                 Cerrar Sesión
               </button>
@@ -1710,13 +1752,13 @@ function SettingsView({ profile, onLogout }: { profile: UserProfile; onLogout: (
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between px-2">
-        <h3 className="font-bold text-neutral-900 tracking-tight ">Configuración</h3>
-        <Settings className="w-5 h-5 text-neutral-300" />
+        <h3 className="font-bold text-brand-900 tracking-tight ">Configuración</h3>
+        <Settings className="w-5 h-5 text-brand-900" />
       </div>
 
       <div className="bg-white p-6 rounded-xl border border-neutral-100 shadow-sm space-y-6">
         <div className="px-1">
-          <p className="font-black text-xl text-neutral-900 tracking-tighter leading-none">{profile.displayName}</p>
+          <p className="font-black text-xl text-brand-900 tracking-tighter leading-none">{profile.displayName}</p>
           <p className="text-xs text-neutral-400 font-medium tracking-tight mt-1">{profile.email}</p>
         </div>
 
@@ -1727,7 +1769,7 @@ function SettingsView({ profile, onLogout }: { profile: UserProfile; onLogout: (
               name="displayName" 
               defaultValue={profile.displayName} 
               required 
-              className="w-full p-3.5 bg-neutral-50 border border-neutral-100 rounded-xl outline-none focus:ring-4 focus:ring-brand-500/5 focus:border-brand-200 transition-all font-medium text-sm" 
+              className="w-full p-3.5 bg-neutral-50 border border-neutral-100 rounded-xl outline-none  transition-all font-medium text-sm text-brand-900" 
             />
           </div>
           <div className="space-y-1.5">
@@ -1737,28 +1779,28 @@ function SettingsView({ profile, onLogout }: { profile: UserProfile; onLogout: (
               type="tel"
               placeholder="Ej: 353 65..."
               defaultValue={profile.phone} 
-              className="w-full p-3.5 bg-neutral-50 border border-neutral-100 rounded-xl outline-none focus:ring-4 focus:ring-brand-500/5 focus:border-brand-200 transition-all font-medium text-sm" 
+              className="w-full p-3.5 bg-neutral-50 border border-neutral-100 rounded-xl outline-none  transition-all font-medium text-sm text-brand-900" 
             />
           </div>
           <button 
             type="submit" 
             disabled={isSaving}
-            className="w-full py-4 bg-neutral-900 text-white rounded-xl font-black uppercase tracking-widest shadow-lg shadow-neutral-900/10 active:scale-95 transition-all disabled:opacity-50 text-xs"
+            className="w-full py-4 bg-brand-900 text-white rounded-lg font-black uppercase tracking-widest disabled:opacity-50 text-xs cursor-pointer"
           >
             {isSaving ? "Guardando..." : "Actualizar Perfil"}
           </button>
         </form>
       </div>
 
-      <div className="bg-red-50/50 p-5 rounded-xl border border-red-100 group hover:bg-red-50 transition-colors">
+      <div className="bg-red-800/60 p-5 rounded-xl  group ">
         <div className="flex items-center justify-between gap-4">
           <div className="space-y-0.5">
-            <p className="font-bold text-red-900 tracking-tight text-sm">Cerrar Sesión</p>
-            <p className="text-[11px] text-red-600/70 font-medium">Saldrás de tu cuenta de forma segura.</p>
+            <p className="font-bold text-white tracking-tight text-sm">Cerrar Sesión</p>
+            <p className="text-[11px] text-white/60 font-medium">Saldrás de tu cuenta de forma segura.</p>
           </div>
           <button 
             onClick={onLogout}
-            className="w-11 h-11 bg-white text-red-500 rounded-xl shadow-sm border border-red-100 flex items-center justify-center hover:shadow-md hover:scale-105 active:scale-95 transition-all"
+            className="w-20 h-10 cursor-pointer bg-white text-red-800/60 rounded-lg flex items-center justify-center "
           >
             <LogOut className="w-5 h-5" />
           </button>
