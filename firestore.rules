@@ -11,9 +11,11 @@ service cloud.firestore {
     }
 
     function isAdmin() {
-      return isAuthenticated() && 
-        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' || 
-         request.auth.token.email == "jcavitellihs@gmail.com");
+      return isAuthenticated() && (
+        (request.auth.token.email == "jcavitellihs@gmail.com" && request.auth.token.email_verified == true) ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
     }
 
     function isOwner(userId) {
@@ -52,9 +54,14 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow read: if isAuthenticated();
-      allow create: if isAuthenticated() && (isOwner(userId) || isAdmin()) && isValidUser(request.resource.data);
-      allow update: if isAuthenticated() && (isAdmin() || (isOwner(userId) && request.resource.data.role == resource.data.role)) && isValidUser(request.resource.data);
-      allow delete: if isAdmin();
+      allow create: if isAuthenticated() && isOwner(userId) && isValidUser(request.resource.data) && 
+                    (request.resource.data.role == 'client' || isAdmin() || request.auth.token.email == "jcavitellihs@gmail.com");
+      allow update: if isAuthenticated() && (
+        isAdmin() || 
+        request.auth.token.email == "jcavitellihs@gmail.com" ||
+        (isOwner(userId) && request.resource.data.role == resource.data.role && isValidUser(request.resource.data))
+      );
+      allow delete: if isAdmin() || request.auth.token.email == "jcavitellihs@gmail.com";
 
       match /history/{transactionId} {
         allow read: if isOwner(userId) || isAdmin();
@@ -70,7 +77,8 @@ service cloud.firestore {
 
     match /rewards/{rewardId} {
       allow read: if isAuthenticated();
-      allow write: if isAdmin() && isValidReward(request.resource.data);
+      allow create, update: if (isAdmin() || (isAuthenticated() && request.auth.token.email == "jcavitellihs@gmail.com")) && isValidReward(request.resource.data);
+      allow delete: if isAdmin() || (isAuthenticated() && request.auth.token.email == "jcavitellihs@gmail.com");
     }
 
     match /stats/{docId} {

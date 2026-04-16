@@ -1416,14 +1416,20 @@ export default function App() {
     };
 
     try {
-      if (editingReward) {
-        await updateDoc(doc(db, 'rewards', editingReward.id), data);
+      setIsRewardModalOpen(false);
+      const rewardName = data.name;
+      const isEditing = !!editingReward;
+      
+      if (isEditing) {
+        const rewardId = editingReward!.id;
+        setEditingReward(null);
+        await updateDoc(doc(db, 'rewards', rewardId), data);
       } else {
         await addDoc(collection(db, 'rewards'), data);
       }
+    } catch (err) {
       setIsRewardModalOpen(false);
       setEditingReward(null);
-    } catch (err) {
       handleFirestoreError(err, OperationType.WRITE, 'rewards');
     }
   };
@@ -1438,7 +1444,6 @@ export default function App() {
     setConfirmingDeleteReward(null);
     try {
       await deleteDoc(doc(db, 'rewards', id));
-      addNotification('Recompensa eliminada', 'info');
     } catch (err) {
       handleFirestoreError(err, OperationType.DELETE, `rewards/${id}`);
     }
