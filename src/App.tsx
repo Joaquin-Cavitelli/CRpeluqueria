@@ -307,10 +307,10 @@ function NotificationToast({ message, type, onClose }: NotificationToastProps) {
   return (
     <motion.div 
       initial={{ opacity: 0, y: -20, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
+      animate={{ opacity: 1, y: -12, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
       className={cn(
-        "px-6 py-4 rounded-md shadow-2xl text-center min-w-[300px] pointer-events-auto",
+        "px-6 py-3 rounded-full  shadow-2xl text-center min-w-[300px] pointer-events-auto",
         type === 'success' ? "bg-brand-900 text-white" : "bg-neutral-900 text-white"
       )}
     >
@@ -445,7 +445,7 @@ const AdminDashboard = memo(function AdminDashboard({
           <h3 className="font-bold text-brand-900 flex items-center gap-2">
             Canjes Pendientes
           </h3>
-          <span className="h-6 w-6 flex items-center justify-center bg-green-800/60 text-white text-[10px] font-bold rounded-full">
+          <span className="h-6 w-6 flex items-center justify-center bg-brand-400 text-brand-900 text-[10px] font-bold rounded-full">
             {recentRedemptions.length}
           </span>
         </div>
@@ -587,14 +587,14 @@ const AdminUsers = memo(function AdminUsers({ users, onSelectUser, onScan, allTu
             <button 
               key={u.uid} 
               onClick={() => onSelectUser(u)}
-              className="w-full p-6 flex items-center justify-between hover:bg-neutral-50 transition-all group active:bg-neutral-100"
+              className="w-full p-6 flex items-center justify-between hover:bg-neutral-100 transition-all group active:bg-neutral-200"
             >
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-brand-900 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:bg-brand-600 transition-colors">
+                <div className="w-12 h-12 bg-brand-900 rounded-2xl flex items-center justify-center text-white ">
                   <UserIcon className="w-6 h-6" />
                 </div>
                 <div className="text-left">
-                  <p className="font-bold text-brand-900 group-hover:text-brand-600 transition-colors">{u.displayName}</p>
+                  <p className="font-bold text-brand-900 ">{u.displayName}</p>
                   <div className="flex items-center gap-2">
                     
                     <span className="text-[10px] text-neutral-400 font-medium">{u.email}</span>
@@ -603,9 +603,9 @@ const AdminUsers = memo(function AdminUsers({ users, onSelectUser, onScan, allTu
               </div>
               <div className="flex items-center gap-3">
                 <div className="text-right">
-                  <p className="text-sm font-extrabold text-brand-900 tracking-tight group-hover:text-brand-600 transition-colors">
+                  <p className="text-sm font-extrabold text-brand-900 tracking-tight ">
                     {sortBy === 'total' ? (u.totalTurns ?? u.turns ?? 0) : u.turns} 
-                    <span className="text-[10px] text-brand-900 font-bold ml-1 uppercase tracking-tighter group-hover:text-brand-600 transition-colors">
+                    <span className="text-[10px] text-brand-900 font-bold ml-1 uppercase tracking-tighter ">
                       {sortBy === 'total' ? 'Total' : 'Pts'}
                     </span>
                   </p>
@@ -616,7 +616,7 @@ const AdminUsers = memo(function AdminUsers({ users, onSelectUser, onScan, allTu
                     </p>
                   )}
                 </div>
-                <ChevronRight className="w-5 h-5 text-neutral-200 group-hover:text-brand-600 transition-colors" />
+                <ChevronRight className="w-5 h-5 text-neutral-200 group-hover:text-brand-900 transition-colors" />
               </div>
             </button>
           );
@@ -631,29 +631,41 @@ function AdminRewards({ rewards, onEdit, onDelete, onAdd }: { rewards: Reward[];
     <div className="space-y-4">
       <button 
         onClick={onAdd}
-        className="w-full flex items-center justify-center gap-2 py-4 bg-neutral-900 text-white rounded-md font-bold shadow-lg shadow-neutral-200 active:scale-95 transition-all"
+        className="w-full flex items-center justify-center gap-2 py-3 bg-brand-900 text-white rounded-md font-semibold cursor-pointer"
       >
-        <Plus className="w-5 h-5" />
-        Nueva Recompensa
+        Nuevo premio
       </button>
 
-      <div className="space-y-3">
+      <div className="bg-white rounded-3xl border border-neutral-100 shadow-sm overflow-hidden divide-y divide-neutral-50">
         {[...rewards].sort((a, b) => a.requiredTurns - b.requiredTurns).map(r => (
-          <div key={r.id} className="bg-white p-5 rounded-md border border-neutral-100 shadow-sm flex items-center justify-between">
+          <div key={r.id} className="w-full p-6 flex items-center justify-between group">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-neutral-50 rounded-md flex items-center justify-center text-neutral-400">
-                <Package className="w-6 h-6" />
+              <div className="w-12 h-12 bg-brand-900 rounded-2xl flex items-center justify-center text-white shadow-lg">
+                <Gift className="w-6 h-6" />
               </div>
-              <div>
-                <p className="font-bold text-neutral-900">{r.name}</p>
-                <p className="text-xs text-neutral-500">{r.requiredTurns} turnos • {r.type}</p>
+              <div className="text-left">
+                <p className="font-bold text-brand-900">{r.name}</p>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-brand-900 bg-brand-900/10 px-2 py-0.5 rounded-full">
+                    {r.requiredTurns} Pts
+                  </span>
+                  <span className="text-[10px] text-neutral-400 font-medium uppercase tracking-widest">{r.type}</span>
+                </div>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <button onClick={() => onEdit(r)} className="p-2 text-neutral-400 hover:text-neutral-900 transition-colors">
+            <div className="flex items-center gap-1">
+              <button 
+                onClick={() => onEdit(r)} 
+                className="p-2 text-brand-900 rounded-xl cursor-pointer"
+                title="Editar"
+              >
                 <Edit2 className="w-5 h-5" />
               </button>
-              <button onClick={() => onDelete(r.id)} className="p-2 text-neutral-400 hover:text-red-500 transition-colors">
+              <button 
+                onClick={() => onDelete(r.id)} 
+                className="p-2 text-red-800/60 rounded-xl cursor-pointer"
+                title="Eliminar"
+              >
                 <Trash2 className="w-5 h-5" />
               </button>
             </div>
@@ -908,10 +920,10 @@ function AdminUserDetail({
     const availableRewards = rewards.filter(r => r.requiredTurns <= user.turns);
     const upcomingRewards = rewards.filter(r => r.requiredTurns > user.turns).sort((a, b) => a.requiredTurns - b.requiredTurns);
     
-    let message = `Hola ${user.displayName}! Tenés ${user.turns} puntos acumulados en CR Peluquería. ✂️\n\n`;
+    let message = `Hola ${user.displayName}! Tenés ${user.turns} puntos acumulados en CR Peluquería.\n\n`;
     
     if (availableRewards.length > 0) {
-      message += `🎁 Premios que ya podés canjear:\n`;
+      message += `Premios que ya podés canjear:\n`;
       availableRewards.forEach(r => {
         message += `- ${r.name} (${r.requiredTurns} pts)\n`;
       });
@@ -920,7 +932,7 @@ function AdminUserDetail({
     
     if (upcomingRewards.length > 0) {
       const next = upcomingRewards[0];
-      message += `🚀 Te faltan solo ${next.requiredTurns - user.turns} puntos para tu próximo premio: ${next.name}!\n`;
+      message += `Te faltan solo ${next.requiredTurns - user.turns} puntos para tu próximo premio: ${next.name}!\n`;
       if (upcomingRewards.length > 1) {
         message += `\nTambién podés seguir acumulando para:\n`;
         upcomingRewards.slice(1, 3).forEach(r => {
@@ -995,13 +1007,14 @@ function AdminUserDetail({
       
 
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-brand-900 text-white p-5 rounded-2xl text-center shadow-xl">
-          <p className="text-[10px] font-bold uppercase tracking-widest  mb-1">Puntos Actuales</p>
-          <p className="text-3xl font-black text-white">{user.turns}</p>
-        </div>
+        
         <div className="bg-white border border-neutral-100 p-5 rounded-2xl text-center flex flex-col justify-center shadow-sm">
           <p className="text-[10px] font-bold uppercase tracking-widest text-brand-900 mb-1">Puntos Totales</p>
           <p className="text-3xl font-bold text-brand-900">{user.totalTurns ?? user.turns ?? 0}</p>
+        </div>
+        <div className="bg-brand-900 text-white p-5 rounded-2xl text-center shadow-xl">
+          <p className="text-[10px] font-bold uppercase tracking-widest  mb-1">Puntos Actuales</p>
+          <p className="text-3xl font-black text-white">{user.turns}</p>
         </div>
       </div>
 
@@ -1572,7 +1585,7 @@ export default function App() {
                 
                 <button 
                   onClick={() => setIsScannerOpen(true)}
-                  className="w-14 h-14 bg-brand-900 text-white rounded-full flex items-center justify-center shadow-xl shadow-brand-900/40 hover:bg-brand-950 transition-all active:scale-90 mx-2 group relative overflow-hidden"
+                  className="w-14 h-14 bg-brand-900 text-white rounded-full flex items-center justify-center  hover:bg-brand-950 transition-all active:scale-90 mx-2 group relative overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   <QrCode className="w-7 h-7 relative z-10" />
@@ -1614,20 +1627,20 @@ export default function App() {
         </div>
 
         {/* Reward Modal */}
-        <Modal isOpen={isRewardModalOpen} onClose={() => setIsRewardModalOpen(false)} title={editingReward ? "Editar Recompensa" : "Nueva Recompensa"}>
+        <Modal isOpen={isRewardModalOpen} onClose={() => setIsRewardModalOpen(false)} title={editingReward ? "" : ""}>
           <form onSubmit={saveReward} className="space-y-4">
             <div className="space-y-1">
-              <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Nombre</label>
-              <input name="name" defaultValue={editingReward?.name} required className="w-full p-4 bg-neutral-50 border border-neutral-100 rounded-md outline-none focus:ring-2 focus:ring-neutral-900" />
+              <label className="text-xs font-semibold text-neutral-400 uppercase tracking-widest">Nombre</label>
+              <input name="name" defaultValue={editingReward?.name} required className="w-full p-3 bg-neutral-50 border border-neutral-100 rounded-md outline-none text-brand-900 " />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Turnos</label>
-                <input name="requiredTurns" type="number" defaultValue={editingReward?.requiredTurns} required className="w-full p-4 bg-neutral-50 border border-neutral-100 rounded-md outline-none focus:ring-2 focus:ring-neutral-900" />
+                <label className="text-xs font-semibold text-neutral-400 uppercase tracking-widest">Puntos</label>
+                <input name="requiredTurns" type="number" defaultValue={editingReward?.requiredTurns} required className="w-full p-3 bg-neutral-50 border border-neutral-100 rounded-md outline-none text-brand-900 " />
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Tipo</label>
-                <select name="type" defaultValue={editingReward?.type || 'servicio'} className="w-full p-4 bg-neutral-50 border border-neutral-100 rounded-md outline-none focus:ring-2 focus:ring-neutral-900">
+                <label className="text-xs font-semibold text-neutral-400 uppercase tracking-widest">Tipo</label>
+                <select name="type" defaultValue={editingReward?.type || 'servicio'} className="w-full p-3 bg-neutral-50 border border-neutral-100 rounded-md outline-none text-brand-900 ">
                   <option value="servicio">Servicio</option>
                   <option value="producto">Producto</option>
                   <option value="descuento">Descuento</option>
@@ -1635,11 +1648,11 @@ export default function App() {
               </div>
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest">Descripción</label>
-              <textarea name="description" defaultValue={editingReward?.description} className="w-full p-4 bg-neutral-50 border border-neutral-100 rounded-md outline-none focus:ring-2 focus:ring-neutral-900 min-h-[100px]" />
+              <label className="text-xs font-semibold text-neutral-400 uppercase tracking-widest">Descripción</label>
+              <textarea name="description" defaultValue={editingReward?.description} className="w-full p-3 bg-neutral-50 border border-neutral-100 rounded-md outline-none text-brand-900 min-h-[100px]" />
             </div>
-            <button type="submit" className="w-full py-4 bg-neutral-900 text-white rounded-md font-bold shadow-lg active:scale-95 transition-all">
-              Guardar Recompensa
+            <button type="submit" className="w-full py-3 bg-brand-900 text-white rounded-md font-semibold shadow-lg active:scale-95 transition-all">
+              Guardar
             </button>
           </form>
         </Modal>
@@ -1672,25 +1685,23 @@ export default function App() {
         </Modal>
 
         {/* Delete Reward Confirmation */}
-        <Modal isOpen={!!confirmingDeleteReward} onClose={() => setConfirmingDeleteReward(null)} title="Eliminar Recompensa">
+        <Modal isOpen={!!confirmingDeleteReward} onClose={() => setConfirmingDeleteReward(null)} title="">
           <div className="space-y-6 text-center">
-            <div className="w-20 h-20 bg-red-50 text-red-500 rounded-md flex items-center justify-center mx-auto">
-              <Trash2 className="w-10 h-10" />
-            </div>
+            
             <div className="space-y-2">
               <h3 className="text-xl font-bold text-neutral-900">¿Estás seguro?</h3>
-              <p className="text-sm text-neutral-500">Esta acción no se puede deshacer y la recompensa dejará de estar disponible para los clientes.</p>
+              <p className="text-sm text-neutral-500">Esta acción no se puede deshacer y el premio dejará de estar disponible para los clientes.</p>
             </div>
             <div className="flex gap-3 pt-4">
               <button 
                 onClick={() => setConfirmingDeleteReward(null)}
-                className="flex-1 py-4 bg-neutral-100 text-neutral-500 rounded-md font-bold active:scale-95 transition-all"
+                className="flex-1 py-2 bg-neutral-100 text-neutral-500 rounded-md font-semibold active:scale-95 transition-all"
               >
                 Cancelar
               </button>
               <button 
                 onClick={confirmDeleteReward}
-                className="flex-1 py-4 bg-red-500 text-white rounded-md font-bold shadow-lg active:scale-95 transition-all"
+                className="flex-1 py-2 bg-red-800/60 text-white rounded-md font-semibold shadow-lg active:scale-95 transition-all"
               >
                 Eliminar
               </button>
@@ -1708,13 +1719,13 @@ export default function App() {
             <div className="flex gap-3 pt-4">
               <button 
                 onClick={() => setIsLogoutConfirmOpen(false)}
-                className="flex-1 py-2 bg-neutral-100 text-neutral-500 rounded-md font-bold active:scale-95 transition-all"
+                className="flex-1 py-2 bg-neutral-100 text-neutral-500 rounded-md font-semibold active:scale-95 transition-all"
               >
                 Cancelar
               </button>
               <button 
                 onClick={handleLogout}
-                className="flex-1 py-2 bg-red-800/60 text-white rounded-md font-bold shadow-lg active:scale-95 transition-all"
+                className="flex-1 py-2 bg-red-800/60 text-white rounded-md font-semibold shadow-lg active:scale-95 transition-all"
               >
                 Cerrar Sesión
               </button>
@@ -1792,18 +1803,16 @@ function SettingsView({ profile, onLogout }: { profile: UserProfile; onLogout: (
         </form>
       </div>
 
-      <div className="bg-red-800/60 p-5 rounded-xl  group ">
+      <div className="bg-white p-5 rounded-xl  group ">
         <div className="flex items-center justify-between gap-4">
-          <div className="space-y-0.5">
-            <p className="font-bold text-white tracking-tight text-sm">Cerrar Sesión</p>
-            <p className="text-[11px] text-white/60 font-medium">Saldrás de tu cuenta de forma segura.</p>
-          </div>
+          
           <button 
             onClick={onLogout}
-            className="w-20 h-10 cursor-pointer bg-white text-red-800/60 rounded-lg flex items-center justify-center "
+            className="w-full py-4 bg-red-800/60 text-white rounded-lg font-black uppercase tracking-widest disabled:opacity-50 text-xs cursor-pointer"
           >
-            <LogOut className="w-5 h-5" />
+            Cerrar Sesión
           </button>
+          
         </div>
       </div>
     </div>
