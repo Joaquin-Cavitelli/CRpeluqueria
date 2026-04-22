@@ -436,7 +436,7 @@ const AdminDashboard = memo(function AdminDashboard({
             <Sparkles className="w-15 h-15" />
           </div>
           <p className="text-3xl font-extrabold text-brand-900 tracking-tighter">{stats.totalTurns}</p>
-          <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">Puntos Totales</p>
+          <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">Puntos</p>
         </div>
       </div>
 
@@ -445,7 +445,7 @@ const AdminDashboard = memo(function AdminDashboard({
           <h3 className="font-bold text-brand-900 flex items-center gap-2">
             Canjes Pendientes
           </h3>
-          <span className="h-6 w-6 flex items-center justify-center bg-brand-400 text-brand-900 text-[10px] font-bold rounded-full">
+          <span className="h-6 w-6 flex items-center justify-center bg-brand-900 text-white text-[10px] font-bold rounded-full">
             {recentRedemptions.length}
           </span>
         </div>
@@ -914,6 +914,36 @@ function AdminUserDetail({
   transactions: Transaction[];
   rewards: Reward[];
 }) {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleUpdateUser = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const displayName = formData.get('displayName') as string;
+    let phone = formData.get('phone') as string;
+    
+    // Normalize phone number (adding 54 if it doesn't have it)
+    phone = phone.replace(/\D/g, '');
+    if (phone && !phone.startsWith('54')) {
+      phone = `54${phone}`;
+    }
+
+    setIsSaving(true);
+    try {
+      await updateDoc(doc(db, 'users', user.uid), {
+        displayName,
+        phone
+      });
+      addNotification("Cliente actualizado", "success");
+      setIsEditModalOpen(false);
+    } catch (err) {
+      handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}`);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const handleSendWhatsApp = () => {
     if (!user.phone) return;
     
@@ -955,56 +985,80 @@ function AdminUserDetail({
         <h2 className="font-bold text-brand-900 tracking-tight">Detalle del Cliente</h2>
       </div>
 
-      <div className="flex gap-4 flex-col  p-4 bg-white border border-neutral-100 rounded-2xl shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-brand-900 rounded-2xl flex items-center justify-center text-white shadow-lg ">
-                  <UserIcon className="w-6 h-6" />
-                </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h4 className="font-bold text-lg text-brand-900 leading-tight">{user.displayName}</h4>
-              
-            </div>
-            <p className="text-xs text-neutral-400 font-medium">{user.email}</p>
+      <div className="flex flex-col gap-5 p-5 bg-white border border-neutral-100 rounded-3xl shadow-sm">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 bg-brand-900 rounded-2xl flex-shrink-0 flex items-center justify-center text-white shadow-lg">
+            <UserIcon className="w-7 h-7" />
           </div>
-          
+          <div className="flex-1 min-w-0">
+            <h4 className="font-bold text-xl text-brand-900 leading-tight truncate">{user.displayName}</h4>
+            <p className="text-sm text-neutral-400 font-medium truncate italic">{user.email}</p>
+          </div>
         </div>
-        <div>
-          <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest px-1">WhatsApp</label>
-        <div className="flex gap-2">
-          <div className="flex-1 flex items-center bg-neutral-50 border border-neutral-100 rounded-xl px-4 outline-none">
-            <input 
-              type="tel" 
-              placeholder="Ej: 353 65..."
-              defaultValue={displayPhone}
-              onBlur={async (e) => {
-                const val = e.target.value.replace(/\D/g, '');
-                if (!val) return;
-                const fullPhone = `54${val}`;
-                if (fullPhone === user.phone) return;
-                try {
-                  await updateDoc(doc(db, 'users', user.uid), { phone: fullPhone });
-                  addNotification("Teléfono actualizado", "success");
-                } catch (err) {
-                  handleFirestoreError(err, OperationType.WRITE, `users/${user.uid}`);
-                }
-              }}
-              className="flex-1 py-3 bg-transparent outline-none font-mono text-sm text-brand-900 placeholder:text-neutral-400"
-            />
-          </div>
+        
+        <div className="flex items-center gap-2 w-full">
+          <button 
+            onClick={() => setIsEditModalOpen(true)}
+            className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-neutral-50 text-neutral-500 rounded-2xl active:scale-95 transition-all hover:bg-neutral-100 hover:text-brand-900 font-black uppercase tracking-widest text-[10px] cursor-pointer"
+          >
+            <Edit2 className="w-3.5 h-3.5" />
+            Editar Perfil
+          </button>
           {user.phone && (
             <button 
               onClick={handleSendWhatsApp}
-              className="p-3 bg-green-800/60 text-white rounded-xl shadow-lg active:scale-95 transition-all flex items-center justify-center cursor-pointer"
-              title="Enviar WhatsApp"
+              className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-green-500/10 text-green-600 rounded-2xl active:scale-95 transition-all hover:bg-green-500/20 font-black uppercase tracking-widest text-[10px] cursor-pointer"
             >
-              <MessageCircle className="w-5 h-5" />
+              <MessageCircle className="w-3.5 h-3.5" />
+              WhatsApp
             </button>
           )}
         </div>
-        </div>
       </div>
-      
+
+      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} title="Editar Cliente">
+        <form onSubmit={handleUpdateUser} className="space-y-4">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest px-1">Nombre Completo</label>
+            <input 
+              name="displayName" 
+              defaultValue={user.displayName} 
+              required 
+              className="w-full p-3.5 bg-neutral-50 border border-neutral-100 rounded-xl outline-none transition-all font-medium text-sm text-brand-900" 
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest px-1">Número de Teléfono</label>
+            <div className="flex items-center bg-neutral-50 border border-neutral-100 rounded-xl px-4">
+              <span className="text-neutral-400 font-mono text-sm mr-1">54</span>
+              <input 
+                name="phone" 
+                type="tel"
+                placeholder="353 65..."
+                defaultValue={displayPhone} 
+                className="flex-1 py-3.5 bg-transparent border-none outline-none font-medium text-sm text-brand-900" 
+              />
+            </div>
+            <p className="text-[10px] text-neutral-400 px-1 mt-1 italic">No incluyas el código de país (54)</p>
+          </div>
+          <div className="flex gap-3 pt-2">
+            <button 
+              type="button" 
+              onClick={() => setIsEditModalOpen(false)}
+              className="flex-1 py-3 font-bold text-neutral-400 bg-neutral-100 rounded-xl active:scale-95 transition-all text-sm"
+            >
+              Cancelar
+            </button>
+            <button 
+              type="submit" 
+              disabled={isSaving}
+              className="flex-1 py-3 bg-brand-900 text-white rounded-xl font-bold active:scale-95 transition-all text-sm disabled:opacity-50"
+            >
+              {isSaving ? "Guardando..." : "Guardar Cambios"}
+            </button>
+          </div>
+        </form>
+      </Modal>
 
       <div className="grid grid-cols-2 gap-3">
         
@@ -1603,7 +1657,14 @@ export default function App() {
               <>
                 <NavButton active={activeTab === 'client'} onClick={() => setActiveTab('client')} icon={<Star className="w-5 h-5" />} label="Mi Tarjeta" hideLabel />
                 <NavButton active={activeTab === 'activity'} onClick={() => setActiveTab('activity')} icon={<History className="w-5 h-5" />} label="Actividad" hideLabel />
-                <NavButton active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} icon={<Settings className="w-5 h-5" />} label="Ajustes" hideLabel />
+                <NavButton 
+                  active={activeTab === 'settings'} 
+                  onClick={() => setActiveTab('settings')} 
+                  icon={<Settings className="w-5 h-5" />} 
+                  label="Ajustes" 
+                  hideLabel 
+                  showBadge={!profile?.phone}
+                />
               </>
             )}
           </nav>
@@ -1789,7 +1850,12 @@ function SettingsView({ profile, onLogout }: { profile: UserProfile; onLogout: (
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-[9px] font-black text-neutral-400 uppercase tracking-[0.2em] px-1">Número de Teléfono</label>
+            <div className="flex items-center gap-1.5 px-1">
+              <label className="text-[9px] font-black text-neutral-400 uppercase tracking-[0.2em]">Número de Teléfono</label>
+              {!profile.phone && (
+                <span className="w-1.5 h-1.5 bg-red-900/60 rounded-full animate-pulse" />
+              )}
+            </div>
             <input 
               name="phone" 
               type="tel"
@@ -1872,12 +1938,12 @@ function ClientSkeleton() {
   );
 }
 
-function NavButton({ active, onClick, icon, label, hideLabel }: { active: boolean; onClick: () => void; icon: React.ReactNode; label: string; hideLabel?: boolean }) {
+function NavButton({ active, onClick, icon, label, hideLabel, showBadge }: { active: boolean; onClick: () => void; icon: React.ReactNode; label: string; hideLabel?: boolean; showBadge?: boolean }) {
   return (
     <button 
       onClick={onClick}
       className={cn(
-        "flex items-center justify-center p-3 rounded-full transition-all duration-300 active:scale-95",
+        "flex items-center justify-center p-3 rounded-full transition-all duration-300 active:scale-95 relative",
         active 
           ? "bg-brand-900/10 text-brand-900 shadow-sm" 
           : "text-neutral-400 hover:text-neutral-600 hover:bg-neutral-50"
@@ -1887,6 +1953,9 @@ function NavButton({ active, onClick, icon, label, hideLabel }: { active: boolea
       <span className={cn("transition-transform duration-300", active && "scale-110")}>
         {React.cloneElement(icon as React.ReactElement, { className: "w-5 h-5" })}
       </span>
+      {showBadge && (
+        <span className="absolute top-2 right-2 w-2 h-2 bg-red-900/60 rounded-full border-2 border-white" />
+      )}
     </button>
   );
 }
